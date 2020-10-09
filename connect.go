@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/mitchellh/go-homedir"
-	"github.com/ysicing/go-utils/exfile"
-	"github.com/ysicing/logger"
+	"github.com/ysicing/ext/logger"
+	"github.com/ysicing/ext/utils/exfile"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -24,7 +24,7 @@ func (ss *SSH) sshAuth(passwd, pkfile string) (auth []ssh.AuthMethod) {
 	if exfile.CheckFileExistsv2(pkfile) {
 		pkfiledata, err := ioutil.ReadFile(pkfile)
 		if err != nil {
-			logger.Exitf("readv pkfile err: %v", err)
+			logger.Slog.Exit0f("readv pkfile err: %v", err)
 		}
 		pk, err := ssh.ParsePrivateKey(pkfiledata)
 		if err == nil {

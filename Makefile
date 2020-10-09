@@ -42,10 +42,7 @@ clean: ## clean
 	rm -rf dist
 
 install: clean ## install
-	go install \
-		-ldflags   "-X 'github.com/ysicing/crtools/cmd.Version=${BUILD_VERSION}' \
-                            -X 'github.com/ysicing/crtools/cmd.BuildDate=${BUILD_DATE}' \
-                            -X 'github.com/ysicing/crtools/cmd.CommitID=${COMMIT_SHA1}'"
+	go install
 
 .PHONY : build release clean install
 

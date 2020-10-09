@@ -10,7 +10,7 @@ import (
 
 type Client struct {
 	*SSH
-	SSHClient *ssh.Client
+	SSHClient  *ssh.Client
 	SSHSession *ssh.Session
 	SFTPClient *sftp.Client
 }

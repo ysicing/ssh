@@ -6,8 +6,8 @@ package ssh
 import "time"
 
 type SSH struct {
-	User string
+	User     string
 	Password string
-	PkFile string
-	Timeout *time.Duration
+	PkFile   string
+	Timeout  *time.Duration
 }
