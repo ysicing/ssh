@@ -25,7 +25,7 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "ssh",
-	Short: fmt.Sprintf("ssh工具, 版本: %v", "0.0.4 2020-11-13 13:14:25 cea63296b27dffb1d8409c0fd62cdf789e1cc5cb"),
+	Short: fmt.Sprintf("ssh工具, 版本: %v", "0.0.4 2020-11-13 13:14:25 4a7153b415ebb7f552589e2eb33f8affc78726a8"),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if len(ips) < 1 {
 			logger.Slog.Exit0("ip不允许为空")
