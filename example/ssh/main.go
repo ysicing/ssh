@@ -4,11 +4,13 @@
 package main
 
 import (
+	"fmt"
+	"sync"
+
 	"github.com/spf13/cobra"
 	"github.com/ysicing/ext/logger"
 	"github.com/ysicing/ext/utils/extime"
 	"github.com/ysicing/ssh"
-	"sync"
 )
 
 var (
@@ -18,11 +20,12 @@ var (
 	pkfile string
 	xcmd   string
 	mp     bool // Multiple processes 多进程
+	debug  bool
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "ssh",
-	Short: "命令行工具",
+	Short: fmt.Sprintf("ssh工具, 版本: %v", "0.0.4 2020-11-13 13:14:25 cea63296b27dffb1d8409c0fd62cdf789e1cc5cb"),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		if len(ips) < 1 {
 			logger.Slog.Exit0("ip不允许为空")
@@ -44,7 +47,7 @@ var rootCmd = &cobra.Command{
 			var wg sync.WaitGroup
 			for _, ip := range ips {
 				wg.Add(1)
-				s.CmdAsync(ip, xcmd, &wg)
+				s.CmdAsync(ip, xcmd, &wg, debug)
 			}
 			wg.Wait()
 		} else {
@@ -60,7 +63,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	cfg := &logger.LogConfig{Simple: true}
+	cfg := &logger.Config{Simple: true, ConsoleOnly: true}
 	logger.InitLogger(cfg)
 	rootCmd.PersistentFlags().StringArrayVarP(&ips, "ip", "", nil, "ip地址eg: 127.0.0.1, 127.0.0.1:2222")
 	rootCmd.PersistentFlags().StringVarP(&user, "user", "u", "root", "用户")
@@ -68,6 +71,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&pkfile, "pkfile", "k", "", "私钥")
 	rootCmd.PersistentFlags().StringVarP(&xcmd, "c", "", "", "命令")
 	rootCmd.PersistentFlags().BoolVarP(&mp, "mp", "", true, "多进程")
+	rootCmd.PersistentFlags().BoolVarP(&debug, "debug", "", false, "debug")
 }
 
 func main() {

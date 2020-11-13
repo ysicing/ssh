@@ -33,10 +33,10 @@ build: clean ## 构建二进制
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}"
 
 release:  ## github release
-	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate --debug ${BUILD_VERSION} dist
+	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -replace -recreate --debug ${BUILD_VERSION} example/ssh/dist
 
 pre-release:  ## github pre-release
-	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -soft -prerelease --debug ${BUILD_VERSION} dist
+	ghr -u ysicing -t $(GITHUB_RELEASE_TOKEN) -soft -prerelease --debug ${BUILD_VERSION} example/ssh/dist
 
 clean: ## clean
 	rm -rf dist

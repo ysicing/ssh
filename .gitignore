@@ -9,3 +9,4 @@ out
 gen
 
 example/ssh/dist
+ysssh.rb

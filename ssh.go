@@ -6,10 +6,11 @@ package ssh
 import (
 	"bufio"
 	"fmt"
-	"github.com/ysicing/ext/utils/exmisc"
 	"io"
 	"os"
 	"sync"
+
+	"github.com/ysicing/ext/utils/exmisc"
 
 	"github.com/ysicing/ext/logger"
 )
@@ -33,7 +34,7 @@ func (ss *SSH) Run(host string, cmd string) {
 	}
 }
 
-func readPipe(host string, pipe io.Reader, isErr bool) {
+func readPipe(host string, pipe io.Reader, isErr bool, rundebug ...bool) {
 	r := bufio.NewReader(pipe)
 	for {
 		line, _, err := r.ReadLine()
@@ -45,15 +46,25 @@ func readPipe(host string, pipe io.Reader, isErr bool) {
 			return
 		} else {
 			if isErr {
-				logger.Slog.Errorf("[%s] %s", exmisc.SRed(host), line)
+				if len(rundebug) > 0 && rundebug[0] {
+					logger.Slog.Errorf("[%s] %s", exmisc.SRed(host), line)
+				} else {
+					msg, _ := fmt.Printf("%s", line)
+					fmt.Println(msg)
+				}
 			} else {
-				logger.Slog.Infof("[%s] %s", exmisc.SGreen(host), line)
+				if len(rundebug) > 0 && rundebug[0] {
+					logger.Slog.Infof("[%s] %s", exmisc.SGreen(host), line)
+				} else {
+					msg, _ := fmt.Printf("%s", line)
+					fmt.Println(msg)
+				}
 			}
 		}
 	}
 }
 
-func (ss *SSH) CmdAsync(host string, cmd string, wg *sync.WaitGroup) error {
+func (ss *SSH) CmdAsync(host string, cmd string, wg *sync.WaitGroup, rundebug ...bool) error {
 	defer wg.Done()
 	fmt.Printf("[ssh][%s] ➜   %s\n", exmisc.SGreen(host), cmd)
 	session, err := ss.Connect(host)
@@ -79,11 +90,11 @@ func (ss *SSH) CmdAsync(host string, cmd string, wg *sync.WaitGroup) error {
 	doneout := make(chan bool, 1)
 	doneerr := make(chan bool, 1)
 	go func() {
-		readPipe(host, stderr, true)
+		readPipe(host, stderr, true, rundebug...)
 		doneerr <- true
 	}()
 	go func() {
-		readPipe(host, stdout, false)
+		readPipe(host, stdout, false, rundebug...)
 		doneout <- true
 	}()
 	<-doneerr
