@@ -1,3 +1,5 @@
+[Deprecated] 请使用 `ergo ops exec`
+
 ## go mod ssh
 
 ```bash
